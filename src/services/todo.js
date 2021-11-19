@@ -1,19 +1,13 @@
 import client from '../providers/todo-api';
 
-const post = body => {
-  client.post('/', body);
-};
+const post = body => client.post('/', body);
 
-const getAll = () => {
-  return client.get('/');
-};
+const getAll = () => client.get('/');
 
-const update = ({ id, ...body }) => {
-  client.put(`/${id}`, body);
-};
+const getById = id => client.get(`/${id}`);
 
-const del = id => {
-  client.delete(`/${id}`);
-};
+const update = ({ id, ...body }) => client.put(`/${id}`, body);
 
-export { post, getAll, update, del };
+const del = id => client.delete(`/${id}`);
+
+export { post, getAll, getById, update, del };
