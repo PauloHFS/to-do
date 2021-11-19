@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { getById } from '../services/todo';
 
 const TaskForm = () => {
-  const [todoData, setTodoData] = useState({});
+  const [todoData, setTodoData] = useState({ title: '', description: '' });
 
   let params = useParams();
 
@@ -28,10 +28,10 @@ const TaskForm = () => {
   return (
     <form>
       <label htmlFor="title">Title</label>
-      <input type="text" id="title" value={todoData.title} />
+      <input type="text" id="title" defaultValue={todoData.title} />
       <label htmlFor="description">Description</label>
-      <input type="text" id="description" value={todoData.description} />
-      <input type="submit"></input>
+      <input type="text" id="description" defaultValue={todoData.description} />
+      <button onClick={() => console.log('Enviar')}>Enviar</button>
     </form>
   );
 };
