@@ -14,7 +14,9 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="/" element={<TodosTable />}></Route>
-          <Route path="/taskform" element={<TaskForm />}></Route>
+          <Route path="taskform" element={<TaskForm />}>
+            <Route path=":id" element={<TaskForm />}></Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
