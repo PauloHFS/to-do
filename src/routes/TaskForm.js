@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
-import { getById } from '../services/todo';
+import { post, update, getById } from '../services/todo';
 
 const TaskForm = () => {
   const [todoData, setTodoData] = useState({ title: '', description: '' });
+  const params = useParams();
 
-  let params = useParams();
+  const { handleSubmit, register } = useForm({
+    defaultValues: {
+      title: todoData.title,
+      description: todoData.description,
+    },
+  });
 
   useEffect(() => {
     const todoID = params.id;
@@ -25,13 +32,29 @@ const TaskForm = () => {
     getTODO();
   }, [params.id]);
 
+  const onSubmit = async ({ title, description }) => {
+    const todoID = params.id;
+
+    try {
+      let todosAPIresponse;
+      if (todoID) {
+        todosAPIresponse = await update({ id: todoID, title, description });
+      } else {
+        todosAPIresponse = await post({ title, description });
+      }
+      alert(todosAPIresponse.statusText);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor="title">Title</label>
-      <input type="text" id="title" defaultValue={todoData.title} />
+      <input type="text" {...register('title')} />
       <label htmlFor="description">Description</label>
-      <input type="text" id="description" defaultValue={todoData.description} />
-      <button onClick={() => console.log('Enviar')}>Enviar</button>
+      <input type="text" {...register('description')} />
+      <button>Enviar</button>
     </form>
   );
 };
