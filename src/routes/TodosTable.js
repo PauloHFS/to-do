@@ -11,6 +11,15 @@ const TodosTable = () => {
     getTodos();
   }, []);
 
+  const getTodos = async () => {
+    try {
+      const todosResponse = await getAll();
+      setTodos(todosResponse.data);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   const delTodo = async id => {
     try {
       const todosAPIresponse = await del(id);
@@ -23,14 +32,9 @@ const TodosTable = () => {
     }
   };
 
-  const getTodos = async () => {
-    try {
-      const todosResponse = await getAll();
-      setTodos(todosResponse.data);
-    } catch (error) {
-      alert(error);
-    }
-  };
+  console.log(todos);
+
+  if (todos.length === 0) return <strong>LOADING...</strong>;
 
   return (
     <>
