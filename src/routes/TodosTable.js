@@ -32,8 +32,6 @@ const TodosTable = () => {
     }
   };
 
-  console.log(todos);
-
   if (todos.length === 0) return <strong>LOADING...</strong>;
 
   return (
