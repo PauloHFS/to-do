@@ -8,12 +8,7 @@ const TaskForm = () => {
   const [todoData, setTodoData] = useState({ title: '', description: '' });
   const params = useParams();
 
-  const { handleSubmit, register } = useForm({
-    defaultValues: {
-      title: todoData.title,
-      description: todoData.description,
-    },
-  });
+  const { handleSubmit, register } = useForm();
 
   useEffect(() => {
     const todoID = params.id;
@@ -51,9 +46,13 @@ const TaskForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor="title">Title</label>
-      <input type="text" {...register('title')} />
+      <input type="text" {...register('title')} defaultValue={todoData.title} />
       <label htmlFor="description">Description</label>
-      <input type="text" {...register('description')} />
+      <input
+        type="text"
+        {...register('description')}
+        defaultValue={todoData.description}
+      />
       <button>Enviar</button>
     </form>
   );
