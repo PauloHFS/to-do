@@ -1,61 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+
+import Form from '../components/Form/Form';
 
 import { post, update, getById } from '../services/todo';
 
 const TaskForm = () => {
-  const [todoData, setTodoData] = useState({ title: '', description: '' });
   const params = useParams();
 
-  const { handleSubmit, register } = useForm();
+  const [todoData, setTodoData] = useState({
+    id: undefined,
+    title: undefined,
+    description: undefined,
+  });
 
   useEffect(() => {
-    const todoID = params.id;
-
-    const getTODO = async () => {
-      try {
-        const todosAPIresponse = await getById(todoID);
-        if (todosAPIresponse.status === 200) {
-          setTodoData(todosAPIresponse.data);
+    if (params.id !== undefined) {
+      const getTODO = async () => {
+        try {
+          const todosAPIresponse = await getById(params.id);
+          if (todosAPIresponse.status === 200) {
+            setTodoData(todosAPIresponse.data);
+          }
+        } catch (error) {
+          alert(error);
         }
-      } catch (error) {
-        alert(error);
-      }
-    };
+      };
 
-    getTODO();
+      getTODO();
+    }
+
+    return () => {
+      setTodoData({
+        id: undefined,
+        title: undefined,
+        description: undefined,
+      });
+    };
   }, [params.id]);
 
-  const onSubmit = async ({ title, description }) => {
-    const todoID = params.id;
-
-    try {
-      let todosAPIresponse;
-      if (todoID) {
-        todosAPIresponse = await update({ id: todoID, title, description });
-      } else {
-        todosAPIresponse = await post({ title, description });
-      }
-      alert(todosAPIresponse.statusText);
-    } catch (error) {
-      alert(error);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label htmlFor="title">Title</label>
-      <input type="text" {...register('title')} defaultValue={todoData.title} />
-      <label htmlFor="description">Description</label>
-      <input
-        type="text"
-        {...register('description')}
-        defaultValue={todoData.description}
-      />
-      <button>Enviar</button>
-    </form>
-  );
+  // Create a Task
+  if (todoData.id === undefined) return <Form type="create" method={post} />;
+  // Update a Task
+  return <Form type="update" todoData={todoData} method={update} />;
 };
 
 export default TaskForm;
