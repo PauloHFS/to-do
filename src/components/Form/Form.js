@@ -1,33 +1,36 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+import { TextField, Button } from '@mui/material';
+
+import { StyledForm } from './Form.styles';
+
 import { post, update } from '../../services/todo';
 
-const Form = ({ todoData, method }) => {
+const Form = ({ todoData }) => {
   let navigate = useNavigate();
 
   const { handleSubmit, register, setValue } = useForm();
-
-  const [todo, setTodo] = useState({});
 
   useEffect(() => {
     if (todoData) {
       ['title', 'description'].forEach(field =>
         setValue(field, todoData[field])
       );
-      setTodo(todoData);
     }
-  }, [todoData]);
+  }, [todoData, setValue]);
 
   const onSubmit = async ({ title, description }) => {
-    const todoID = todoData.id;
-
     try {
       let todosAPIresponse;
-      if (todoID) {
-        todosAPIresponse = await update({ id: todoID, title, description });
+      if (todoData?.id) {
+        todosAPIresponse = await update({
+          id: todoData.id,
+          title,
+          description,
+        });
       } else {
         todosAPIresponse = await post({ title, description });
       }
@@ -41,13 +44,17 @@ const Form = ({ todoData, method }) => {
   return (
     <Fragment>
       <h3>{todoData ? 'Edit mode' : 'Add mode'}</h3>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <StyledForm onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="title">Title</label>
-        <input type="text" {...register('title')} />
+        <TextField variant="standard" {...register('title')} />
+
         <label htmlFor="description">Description</label>
-        <input type="text" {...register('description')} />
-        <button>Enviar</button>
-      </form>
+        <TextField multiline rows={4} {...register('description')} />
+
+        <Button type="submit" variant="contained">
+          Enviar
+        </Button>
+      </StyledForm>
     </Fragment>
   );
 };
