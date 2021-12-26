@@ -40,9 +40,9 @@ const TaskForm = () => {
   }, [params.id]);
 
   // Create a Task
-  if (todoData.id === undefined) return <Form type="create" method={post} />;
+  if (todoData.id === undefined) return <Form method={post} />;
   // Update a Task
-  return <Form type="update" todoData={todoData} method={update} />;
+  return <Form todoData={todoData} method={update} />;
 };
 
 export default TaskForm;
