@@ -35,35 +35,33 @@ const TodosTable = () => {
   if (todos.length === 0) return <strong>LOADING...</strong>;
 
   return (
-    <>
-      <main>
-        <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Actions</th>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {todos.map(({ id, title, description }) => (
+            <tr key={id}>
+              <td>{id}</td>
+              <td>{title}</td>
+              <td>{description}</td>
+              <td>
+                <button>
+                  <Link to={`/taskform/${id}`}>Edit</Link>
+                </button>
+                <button onClick={() => delTodo(id)}>Delete</button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {todos.map(({ id, title, description }) => (
-              <tr key={id}>
-                <td>{id}</td>
-                <td>{title}</td>
-                <td>{description}</td>
-                <td>
-                  <button>
-                    <Link to={`/taskform/${id}`}>Edit</Link>
-                  </button>
-                  <button onClick={() => delTodo(id)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </main>
-    </>
+          ))}
+        </tbody>
+      </table>
+    </main>
   );
 };
 
