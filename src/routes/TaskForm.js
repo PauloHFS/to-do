@@ -1,39 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { getById } from '../services/todo';
+import Form from '../components/Form/Form';
+
+import { post, update, getById } from '../services/todo';
 
 const TaskForm = () => {
-  const [todoData, setTodoData] = useState({});
+  const params = useParams();
 
-  let params = useParams();
+  const [todoData, setTodoData] = useState({
+    id: undefined,
+    title: undefined,
+    description: undefined,
+  });
 
   useEffect(() => {
-    const todoID = params.id;
-
-    const getTODO = async () => {
-      try {
-        const todosAPIresponse = await getById(todoID);
-        if (todosAPIresponse.status === 200) {
-          setTodoData(todosAPIresponse.data);
+    if (params.id !== undefined) {
+      const getTODO = async () => {
+        try {
+          const todosAPIresponse = await getById(params.id);
+          if (todosAPIresponse.status === 200) {
+            setTodoData(todosAPIresponse.data);
+          }
+        } catch (error) {
+          alert(error);
         }
-      } catch (error) {
-        alert(error);
-      }
-    };
+      };
 
-    getTODO();
+      getTODO();
+    }
+
+    return () => {
+      setTodoData({
+        id: undefined,
+        title: undefined,
+        description: undefined,
+      });
+    };
   }, [params.id]);
 
-  return (
-    <form>
-      <label htmlFor="title">Title</label>
-      <input type="text" id="title" value={todoData.title} />
-      <label htmlFor="description">Description</label>
-      <input type="text" id="description" value={todoData.description} />
-      <input type="submit"></input>
-    </form>
-  );
+  // Create a Task
+  if (todoData.id === undefined) return <Form method={post} />;
+  // Update a Task
+  return <Form todoData={todoData} method={update} />;
 };
 
 export default TaskForm;
